@@ -11,7 +11,7 @@ from dagster._utils import file_relative_path
 from dagster_dbt import dbt_cli_resource, load_assets_from_dbt_project
 from dagster_duckdb_pandas import duckdb_pandas_io_manager
 
-from assets_dbt_python.assets import forecasting, raw_data
+from orchestration.assets import forecasting, raw_data
 
 DBT_PROJECT_DIR = file_relative_path(__file__, "../dbt_project")
 DBT_PROFILES_DIR = file_relative_path(__file__, "../dbt_project/config")
@@ -41,7 +41,8 @@ forecasting_assets = load_assets_from_package_module(
 
 # define jobs as selections over the larger graph
 everything_job = define_asset_job("everything_everywhere_job", selection="*")
-forecast_job = define_asset_job("refresh_forecast_model_job", selection="*order_forecast_model")
+forecast_job = define_asset_job(
+    "refresh_forecast_model_job", selection="*order_forecast_model")
 
 resources = {
     # this io_manager allows us to load dbt models as pandas dataframes

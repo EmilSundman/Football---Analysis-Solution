@@ -1,0 +1,12 @@
+pandas
+dagster 
+dagster-cloud
+dagit
+duckdb
+dbt-bigquery
+dbt-duckdb
+dagster-dbt
+dagster-duckdb-pandas
+scipy
+boto3
+numpy
