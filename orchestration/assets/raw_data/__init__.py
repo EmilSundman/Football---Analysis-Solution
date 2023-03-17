@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from dagster import asset
 
-from assets_dbt_python.utils import random_data
+from orchestration.utils import random_data
 
 
 @asset(compute_kind="random")
@@ -23,6 +23,7 @@ def users() -> pd.DataFrame:
 def orders() -> pd.DataFrame:
     """A table containing all orders that have been placed."""
     return random_data(
-        extra_columns={"order_id": str, "quantity": int, "purchase_price": float, "sku": str},
+        extra_columns={"order_id": str, "quantity": int,
+                       "purchase_price": float, "sku": str},
         n=10000,
     )

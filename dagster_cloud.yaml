@@ -1,4 +1,4 @@
 locations:
-- code_source:
-    package_name: assets_dbt_python
-  location_name: football-analysis-solution
+  - code_source:
+      package_name: orchestration
+    location_name: football-analysis-solution
