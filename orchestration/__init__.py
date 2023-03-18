@@ -60,11 +60,13 @@ forecast_job = define_asset_job(
 resources = {
     # this io_manager allows us to load dbt models as pandas dataframes
     "io_manager": duckdb_pandas_io_manager.configured(
-        {"database": os.path.join(DBT_PROJECT_DIR, "example.duckdb")}
+        {"database": os.path.join(os.path.expanduser(
+            '~'), "localdb.db"), "schema": "raw"}
     ),
     # this io_manager is responsible for storing/loading our pickled machine learning model
     "model_io_manager": fs_io_manager,
     "api_pickle_json": fs_io_manager,
+    "local_pickle": fs_io_manager,
     # this resource is used to execute dbt cli commands
     "dbt": dbt_cli_resource.configured(
         {"project_dir": DBT_PROJECT_DIR, "profiles_dir": DBT_PROFILES_DIR}
