@@ -2,7 +2,7 @@ pandas
 dagster 
 dagster-cloud
 dagit
-duckdb
+duckdb==0.7.1
 dbt-bigquery
 dbt-duckdb
 dagster-dbt
