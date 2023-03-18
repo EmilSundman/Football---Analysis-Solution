@@ -1,3 +1,4 @@
+# %%
 import os
 
 from dagster import (
@@ -11,7 +12,8 @@ from dagster._utils import file_relative_path
 from dagster_dbt import dbt_cli_resource, load_assets_from_dbt_project
 from dagster_duckdb_pandas import duckdb_pandas_io_manager
 
-from orchestration.assets import forecasting, raw_data
+from orchestration.assets import forecasting, raw_data, extractors
+from orchestration.resources import api_football_client
 
 DBT_PROJECT_DIR = file_relative_path(__file__, "../dbt_project")
 DBT_PROFILES_DIR = file_relative_path(__file__, "../dbt_project/config")
@@ -34,6 +36,13 @@ raw_data_assets = load_assets_from_package_module(
     key_prefix=["duckdb", "raw_data"],
 )
 
+api_extractors = load_assets_from_package_module(
+    extractors,
+    group_name="extractors",
+    # all of these assets live in the duckdb database, under the schema raw_data
+    # key_prefix=["duckdb", "raw_data"],
+)
+
 forecasting_assets = load_assets_from_package_module(
     forecasting,
     group_name="forecasting",
@@ -51,14 +60,16 @@ resources = {
     ),
     # this io_manager is responsible for storing/loading our pickled machine learning model
     "model_io_manager": fs_io_manager,
+    "api_pickle_json": fs_io_manager,
     # this resource is used to execute dbt cli commands
     "dbt": dbt_cli_resource.configured(
         {"project_dir": DBT_PROJECT_DIR, "profiles_dir": DBT_PROFILES_DIR}
     ),
-}
+    "api_football_client": api_football_client}
 
 defs = Definitions(
-    assets=[*dbt_assets, *raw_data_assets, *forecasting_assets],
+    assets=[*dbt_assets, *raw_data_assets, *
+            forecasting_assets, *api_extractors],
     resources=resources,
     schedules=[
         ScheduleDefinition(job=everything_job, cron_schedule="@weekly"),
