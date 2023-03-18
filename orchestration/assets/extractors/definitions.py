@@ -68,7 +68,7 @@ def extract_fixtures(context) -> Output[dict]:
     io_manager_key="api_pickle_json",
     compute_kind=compute_kinds.get("python")
 )
-def extract_fixture_events(context) -> dict:
+def extract_fixture_events(context) -> Output[dict]:
     # <!> Need to be partitioned by fixtures our something like that. Maybe two dimensions with league and date partition. Then a loop through fixtures before concating into one dict.
     """
     Sends a get request with the specifed parameters.
@@ -86,7 +86,7 @@ def extract_fixture_events(context) -> dict:
     io_manager_key="api_pickle_json",
     compute_kind=compute_kinds.get("python")
 )
-def extract_fixture_stats(context) -> dict:
+def extract_fixture_stats(context) -> Output[dict]:
     # <!> Need to be partitioned by fixtures our something like that. Maybe two dimensions with league and date partition. Then a loop through fixtures before concating into one dict.
     """
     Sends a get request with the specifed parameters.
@@ -104,7 +104,7 @@ def extract_fixture_stats(context) -> dict:
     io_manager_key="api_pickle_json",
     compute_kind=compute_kinds.get("python")
 )
-def extract_fixture_player_stats(context) -> dict:
+def extract_fixture_player_stats(context) -> Output[dict]:
     # <!> Need to be partitioned by fixtures our something like that. Maybe two dimensions with league and date partition. Then a loop through fixtures before concating into one dict.
     """
     Sends a get request with the specifed parameters.
