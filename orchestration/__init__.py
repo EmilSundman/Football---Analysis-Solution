@@ -12,7 +12,7 @@ from dagster._utils import file_relative_path
 from dagster_dbt import dbt_cli_resource, load_assets_from_dbt_project
 from dagster_duckdb_pandas import duckdb_pandas_io_manager
 
-from orchestration.assets import forecasting, raw_data, extractors
+from orchestration.assets import forecasting, raw_data, extractors, converters
 from orchestration.resources import api_football_client
 
 DBT_PROJECT_DIR = file_relative_path(__file__, "../dbt_project")
@@ -42,6 +42,10 @@ api_extractors = load_assets_from_package_module(
     # all of these assets live in the duckdb database, under the schema raw_data
     # key_prefix=["duckdb", "raw_data"],
 )
+api_converters = load_assets_from_package_module(
+    converters,
+    group_name="converters",
+)
 
 forecasting_assets = load_assets_from_package_module(
     forecasting,
@@ -68,11 +72,13 @@ resources = {
     "api_football_client": api_football_client}
 
 defs = Definitions(
-    assets=[*dbt_assets, *raw_data_assets, *
-            forecasting_assets, *api_extractors],
-    resources=resources,
-    schedules=[
-        ScheduleDefinition(job=everything_job, cron_schedule="@weekly"),
-        ScheduleDefinition(job=forecast_job, cron_schedule="@daily"),
+    assets=[
+        # *dbt_assets, *raw_data_assets, *forecasting_assets,
+        *api_extractors, *api_converters
     ],
+    resources=resources,
+    # schedules=[
+    #     ScheduleDefinition(job=everything_job, cron_schedule="@weekly"),
+    #     ScheduleDefinition(job=forecast_job, cron_schedule="@daily"),
+    # ],
 )
