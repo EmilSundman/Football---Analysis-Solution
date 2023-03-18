@@ -5,7 +5,7 @@ import requests
 
 
 # Parameters
-API_FOOTBALL_KEY = os.getenv("API-FOOTBALL-KEY")
+API_FOOTBALL_KEY = os.getenv("API_FOOTBALL_KEY")
 API_FOOTBALL_BASE_URL = "https://api-football-v1.p.rapidapi.com/v3"
 API_FOOTBALL_HEADERS = {
     "X-RapidAPI-Host": "api-football-v1.p.rapidapi.com",
