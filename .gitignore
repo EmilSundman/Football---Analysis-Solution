@@ -2,4 +2,5 @@ env/
 tmp*/
 *__pycache__*
 *.duckdb 
+*.db*  
 .vscode/

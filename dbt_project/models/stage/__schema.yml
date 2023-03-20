@@ -1,0 +1,7 @@
+version: 2
+
+models:
+  - name: stg_leagues
+  - name: stg_seasons
+  - name: stg_fixtures
+  - name: stg_venues
