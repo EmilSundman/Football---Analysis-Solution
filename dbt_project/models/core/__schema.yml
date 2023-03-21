@@ -1,0 +1,7 @@
+version: 2
+
+models:
+  - name: leagues
+  - name: seasons
+  - name: fixtures
+  - name: venues

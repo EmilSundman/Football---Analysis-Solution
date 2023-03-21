@@ -12,7 +12,7 @@ from dagster._utils import file_relative_path
 from dagster_dbt import dbt_cli_resource, load_assets_from_dbt_project
 from dagster_duckdb_pandas import duckdb_pandas_io_manager
 
-from orchestration.assets import forecasting, raw_data, extractors, converters
+from orchestration.assets import forecasting, raw_data, extractors, converters, reports
 from orchestration.resources import api_football_client
 
 DBT_PROJECT_DIR = file_relative_path(__file__, "../dbt_project")
@@ -23,17 +23,17 @@ dbt_assets = load_assets_from_dbt_project(
     DBT_PROJECT_DIR,
     DBT_PROFILES_DIR,
     # prefix the output assets based on the database they live in plus the name of the schema
-    key_prefix=["duckdb", "dbt_schema"],
+    # key_prefix=["duckdb", "raw_data"],
     # prefix the source assets based on just the database
     # (dagster populates the source schema information automatically)
-    source_key_prefix=["duckdb"],
+    # source_key_prefix=["raw_data"],
 )
 
 raw_data_assets = load_assets_from_package_module(
     raw_data,
     group_name="raw_data",
     # all of these assets live in the duckdb database, under the schema raw_data
-    key_prefix=["duckdb", "raw_data"],
+    # key_prefix=["duckdb", "raw_data"],
 )
 
 api_extractors = load_assets_from_package_module(
@@ -45,6 +45,13 @@ api_extractors = load_assets_from_package_module(
 api_converters = load_assets_from_package_module(
     converters,
     group_name="converters",
+    key_prefix=["raw_data"]
+)
+report_assets = load_assets_from_package_module(
+    reports,
+    group_name="reports",
+    # key_prefix=["duckdb", "raw_data", "reports"],
+
 )
 
 forecasting_assets = load_assets_from_package_module(
@@ -60,8 +67,8 @@ forecast_job = define_asset_job(
 resources = {
     # this io_manager allows us to load dbt models as pandas dataframes
     "io_manager": duckdb_pandas_io_manager.configured(
-        {"database": os.path.join(os.path.expanduser(
-            '~'), "localdb.db"), "schema": "raw"}
+        {"database": os.path.join(
+            DBT_PROJECT_DIR, "localdb.db")}
     ),
     # this io_manager is responsible for storing/loading our pickled machine learning model
     "model_io_manager": fs_io_manager,
@@ -75,8 +82,10 @@ resources = {
 
 defs = Definitions(
     assets=[
-        # *dbt_assets, *raw_data_assets, *forecasting_assets,
-        *api_extractors, *api_converters
+        *dbt_assets,
+        *report_assets,
+        # *raw_data_assets, *forecasting_assets,
+        * api_extractors, *api_converters
     ],
     resources=resources,
     # schedules=[

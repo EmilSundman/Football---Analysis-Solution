@@ -3,5 +3,5 @@ dbt_project:
   outputs:
     local:
       type: duckdb
-      path: example.duckdb
+      path: localdb.db
       schema: dbt_schema

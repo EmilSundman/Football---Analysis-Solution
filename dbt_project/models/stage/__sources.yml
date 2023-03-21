@@ -1,0 +1,8 @@
+version: 2
+
+sources:
+  - name: raw_data
+    tables:
+      - name: raw_leagues
+      - name: raw_seasons
+      - name: raw_fixtures
